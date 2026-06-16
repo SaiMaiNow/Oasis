@@ -1,6 +1,5 @@
 import SwiftUI
 
-/// เก็บ controller ของ Dynamic Island ไว้ และสั่งแสดงตอนแอปเปิด
 final class AppDelegate: NSObject, NSApplicationDelegate {
     let island = DynamicIslandController()
 
@@ -20,6 +19,10 @@ struct OasisApp: App {
             Divider()
             Button("Toggle Dynamic Island") {
                 appDelegate.island.toggle()
+            }
+            Divider()
+            Button("Toggle State Island") {
+                appDelegate.island.toggleState()
             }
             Divider()
             Button("Quit Oasis") {
