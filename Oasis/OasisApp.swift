@@ -21,8 +21,11 @@ struct OasisApp: App {
                 appDelegate.island.toggle()
             }
             Divider()
-            Button("Toggle State Island") {
-                appDelegate.island.toggleState()
+            Button("Song Started") {
+                appDelegate.island.songDidStart()
+            }
+            Button("Song Stopped") {
+                appDelegate.island.songDidStop()
             }
             Divider()
             Button("Quit Oasis") {

@@ -34,21 +34,15 @@ enum PlaybackState {
         }
     }
 
-    var next: PlaybackState {
-        switch self {
-        case .idle:    return .playing
-        case .playing: return .full
-        case .full:    return .idle
-        }
-    }
 }
 
 let islandStageSize = CGSize(width: 400, height: 200)
 let playingHoverSize = CGSize(width: 300, height: 44)
 
 final class IslandModel: ObservableObject {
-    @Published var state: PlaybackState = .full
+    @Published var state: PlaybackState = .idle
     @Published var hovering = false
+    @Published var hasActiveSong = false
 }
 
 struct DynamicIslandPanel: View {
@@ -64,41 +58,97 @@ struct DynamicIslandPanel: View {
                    alignment: .top)
     }
 
-    private var isHovering: Bool { model.state == .playing && model.hovering }
-    private var pillWidth: CGFloat { isHovering ? playingHoverSize.width : model.state.width }
-    private var pillHeight: CGFloat { isHovering ? playingHoverSize.height : model.state.height }
+    private var isPlayingHovering: Bool { model.state == .playing && model.hovering }
+    private var isIdleHovering: Bool { model.state == .idle && model.hovering }
+
+    private var pillWidth: CGFloat {
+        if isPlayingHovering { return playingHoverSize.width }
+        if isIdleHovering { return PlaybackState.playing.width }
+        return model.state.width
+    }
+    private var pillHeight: CGFloat {
+        if isPlayingHovering { return playingHoverSize.height }
+        if isIdleHovering { return PlaybackState.playing.height }
+        return model.state.height
+    }
 
     private var pill: some View {
         content
             .frame(width: pillWidth, height: pillHeight)
             .background(Color.black, in: IslandShape(bottomRadius: model.state.bottomRadius))
-            .shadow(color: .black.opacity(isHovering ? 0.5 : 0), radius: 14, y: 6)
+            .shadow(color: .black.opacity(isPlayingHovering ? 0.5 : 0), radius: 14, y: 6)
+            .contentShape(Rectangle())
+            .onTapGesture {
+                let canTap = model.state == .playing || (model.state == .idle && model.hovering)
+                guard canTap else { return }
+                withAnimation(.spring(response: 0.45, dampingFraction: 0.8)) {
+                    model.state = .full
+                }
+            }
     }
 
     @ViewBuilder
     private var content: some View {
         switch model.state {
-        case .idle:    idleContent
+        case .idle:
+            if isIdleHovering {
+                idleHoverContent.transition(.opacity)
+            } else {
+                idleContent
+            }
         case .playing: playingContent.transition(.opacity)
-        case .full:    fullContent.transition(.opacity)
+        case .full:    fullContent.transition(.opacity.combined(with: .scale(scale: 0.97)))
         }
     }
 
     private var playingContent: some View {
         HStack(spacing: 12) {
-            albumArt(isHovering ? 30 : 24)
+            albumArt(isPlayingHovering ? 30 : 24, inactive: !model.hasActiveSong)
             Spacer(minLength: 5)
-            equalizer(.green, height: isHovering ? 24 : 18, barWidth: isHovering ? 3 : 2)
+            equalizer(
+                model.hasActiveSong ? .green : .white.opacity(0.25),
+                height: isPlayingHovering ? 24 : 18,
+                barWidth: isPlayingHovering ? 3 : 2
+            )
         }
         .padding(.horizontal, 20)
         .padding(.vertical, 20)
     }
 
-    private var idleContent: some View {
-        Color.clear
+    private var idleContent: some View { Color.clear }
+
+    private var idleHoverContent: some View {
+        HStack(spacing: 12) {
+            albumArt(24, inactive: true)
+            Spacer(minLength: 5)
+            equalizer(.white.opacity(0.25), height: 18, barWidth: 2)
+        }
+        .padding(.horizontal, 20)
+        .padding(.vertical, 20)
     }
 
+    @ViewBuilder
     private var fullContent: some View {
+        if model.hasActiveSong {
+            fullSongContent
+        } else {
+            fullNoSongContent
+        }
+    }
+
+    private var fullNoSongContent: some View {
+        VStack(spacing: 10) {
+            Image(systemName: "music.note.slash")
+                .font(.system(size: 28, weight: .light))
+                .foregroundStyle(.white.opacity(0.25))
+            Text("No music playing")
+                .font(.system(size: 13))
+                .foregroundStyle(.white.opacity(0.35))
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+
+    private var fullSongContent: some View {
         VStack(spacing: 14) {
             HStack(spacing: 12) {
                 albumArt(50)
@@ -167,20 +217,17 @@ struct DynamicIslandPanel: View {
         }
     }
 
-    private func albumArt(_ size: CGFloat) -> some View {
-        RoundedRectangle(cornerRadius: size * 0.25, style: .continuous)
-            .fill(
-                LinearGradient(
-                    colors: [.pink, .purple],
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                )
-            )
+    private func albumArt(_ size: CGFloat, inactive: Bool = false) -> some View {
+        let gradient = inactive
+            ? LinearGradient(colors: [.white.opacity(0.12), .white.opacity(0.06)], startPoint: .topLeading, endPoint: .bottomTrailing)
+            : LinearGradient(colors: [.pink, .purple], startPoint: .topLeading, endPoint: .bottomTrailing)
+        return RoundedRectangle(cornerRadius: size * 0.25, style: .continuous)
+            .fill(gradient)
             .frame(width: size, height: size)
             .overlay(
                 Image(systemName: "music.note")
                     .font(.system(size: size * 0.45, weight: .bold))
-                    .foregroundStyle(.white)
+                    .foregroundStyle(.white.opacity(inactive ? 0.25 : 1))
             )
     }
 
