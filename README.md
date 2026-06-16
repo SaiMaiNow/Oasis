@@ -29,7 +29,7 @@ xcodebuild -project Oasis.xcodeproj -scheme Oasis -configuration Release build
 
 ## Install a prebuilt binary (Releases)
 
-Download the `.dmg` from the [Releases](https://github.com/rcn/oasis/releases) page and drag `Oasis.app` into `/Applications`.
+Download the `.dmg` from the [Releases](https://github.com/SaiMaiNow/oasis/releases) page and drag `Oasis.app` into `/Applications`.
 
 The build is **unsigned** (no Apple Developer account), so macOS Gatekeeper will warn you the first time you open it. There are two ways around this:
 
