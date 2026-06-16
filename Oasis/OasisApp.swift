@@ -1,11 +1,26 @@
 import SwiftUI
 
+/// เก็บ controller ของ Dynamic Island ไว้ และสั่งแสดงตอนแอปเปิด
+final class AppDelegate: NSObject, NSApplicationDelegate {
+    let island = DynamicIslandController()
+
+    func applicationDidFinishLaunching(_ notification: Notification) {
+        island.show()
+    }
+}
+
 @main
 struct OasisApp: App {
+    @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
+
     var body: some Scene {
         MenuBarExtra("Oasis", systemImage: "music.note") {
             Text("Oasis")
                 .font(.headline)
+            Divider()
+            Button("Toggle Dynamic Island") {
+                appDelegate.island.toggle()
+            }
             Divider()
             Button("Quit Oasis") {
                 NSApplication.shared.terminate(nil)
