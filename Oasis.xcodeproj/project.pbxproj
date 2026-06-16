@@ -3,20 +3,16 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 70;
 	objects = {
-
-/* Begin PBXBuildFile section */
-		1A0000000000000000000041 /* OasisApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0000000000000000000040 /* OasisApp.swift */; };
-		1A0000000000000000000043 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1A0000000000000000000042 /* Assets.xcassets */; };
-/* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		1A0000000000000000000011 /* Oasis.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Oasis.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		1A0000000000000000000040 /* OasisApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OasisApp.swift; sourceTree = "<group>"; };
-		1A0000000000000000000042 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		1A0000000000000000000044 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		1A0000000000000000000004 /* Oasis */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Oasis; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		1A0000000000000000000032 /* Frameworks */ = {
@@ -45,16 +41,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		1A0000000000000000000004 /* Oasis */ = {
-			isa = PBXGroup;
-			children = (
-				1A0000000000000000000040 /* OasisApp.swift */,
-				1A0000000000000000000042 /* Assets.xcassets */,
-				1A0000000000000000000044 /* Info.plist */,
-			);
-			path = Oasis;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -69,6 +55,9 @@
 			buildRules = (
 			);
 			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				1A0000000000000000000004 /* Oasis */,
 			);
 			name = Oasis;
 			productName = Oasis;
@@ -113,7 +102,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1A0000000000000000000043 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -124,7 +112,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1A0000000000000000000041 /* OasisApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
